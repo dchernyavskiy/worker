@@ -21,6 +21,7 @@ type Service struct {
 	ProviderID  uint
 	Provider    Provider
 	Requests    []Request
+	Cost        float32
 }
 
 type Provider struct {
@@ -43,6 +44,7 @@ type Request struct {
 
 type Payment struct {
 	gorm.Model
-	PayedAt   time.Time
+	PaidAt    time.Time
+	Paid      float32
 	RequestID uint
 }

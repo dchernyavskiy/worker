@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/styles/app.css">
+    <title>{{.Name}}</title>
+</head>
+<body>
+<h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Clients</h1>
+<div class="flex flex-col w-fit mx-auto gap-2 justify-center self-center max-w-[450px]">
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Name:</label>
+        <span>{{.Name}}</span>
+    </div>
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Description:</label>
+        <span>{{.Description}}</span>
+    </div>
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Provider:</label>
+        <span>{{.Provider.Name}}</span>
+    </div>
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Cost:</label>
+        <span>{{.Cost}}</span>
+    </div>
+</div>
+<div class="mx-auto  w-fit relative overflow-x-auto sm:rounded-lg">
+    <h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Requests</h1>
+
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+            <th scope="col" class="px-6 py-3">
+                Client Full Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Status
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{$clientId := .ID}}
+        {{range .Requests}}
+        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <a href="/clients/{{$clientId}}">
+                    {{.Client.FirstName}} {{.Client.LastName}}
+                </a>
+            </th>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{.Status}}
+            </th>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

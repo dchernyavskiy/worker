@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../public/styles/app.css">
-    <title>User List</title>
+    <title>{{.FirstName}} {{.LastName}}</title>
 </head>
 <body>
 <h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Clients</h1>
@@ -57,7 +57,7 @@
                 Status
             </th>
             <th scope="col" class="px-6 py-3">
-                Payed or Pay
+                Paid or Pay
             </th>
         </tr>
         </thead>
@@ -71,7 +71,7 @@
                 </a>
             </th>
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                <a href="providers/{{.Service.Provider.ID}}">
+                <a href="/providers/{{.Service.Provider.ID}}">
                     {{.Service.Provider.Name}}
                 </a>
             </th>
@@ -80,7 +80,7 @@
             </th>
             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                 {{if eq .Status "Completed"}}
-                {{.Payment.PayedAt}}
+                {{.Payment.PaidAt}}
                 {{else}}
                 <form action="/api/payment" method="post" enctype="application/x-www-form-urlencoded">
                     <input type="hidden" id="RequestID" name="RequestID" value="{{.ID}}">

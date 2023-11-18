@@ -18,6 +18,7 @@ func SetupRouter() *gin.Engine {
 	paymentRoutes(r)
 	requestRoutes(r)
 	serviceRoutes(r)
+	providerRoutes(r)
 
 	return r
 }
@@ -72,4 +73,10 @@ func serviceRoutes(r *gin.Engine) {
 		api.POST("/services/delete/:id", serviceController.DeleteService)
 		api.POST("/services/update", serviceController.UpdateService)
 	}
+}
+
+func providerRoutes(r *gin.Engine) {
+	providerController := controllers.ProviderController{}
+
+	r.GET("/providers/:id", providerController.ShowProviderDetails)
 }

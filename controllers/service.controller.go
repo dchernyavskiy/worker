@@ -65,16 +65,13 @@ func (u *ServiceController) ShowServiceDetails(c *gin.Context) {
 		return
 	}
 	var service models.Service
-	result := database.DB.Preload("Requests.Service.Provider").Preload("Requests.Payment").FirstOrInit(&service, id)
+	result := database.DB.Preload("Requests.Client").Preload("Requests.Payment").FirstOrInit(&service, id)
 	if result.Error != nil {
 		c.JSON(400, gin.H{"error": result.Error.Error()})
 		return
 	}
 
-	var services []models.Service
-	database.DB.Order("ID").Preload("Provider").Find(&services)
-
-	c.HTML(200, "service_one.html", services)
+	c.HTML(200, "service_one.html", service)
 }
 
 type ServiceVm struct {

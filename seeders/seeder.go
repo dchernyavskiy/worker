@@ -22,8 +22,9 @@ func seedClients() {
 	database.DB.Find(&clients)
 	if len(clients) == 0 {
 		for i := 0; i < 50; i++ {
-			database.DB.Create(&models.Client{FirstName: fake.FirstName(), LastName: fake.LastName(), Email: fake.EmailAddress(), Phone: fake.Phone()})
+			clients = append(clients, models.Client{FirstName: fake.FirstName(), LastName: fake.LastName(), Email: fake.EmailAddress(), Phone: fake.Phone()})
 		}
+		database.DB.Create(&clients)
 	}
 }
 
@@ -32,8 +33,9 @@ func seedProviders() {
 	database.DB.Find(&providers)
 	if len(providers) == 0 {
 		for i := 0; i < 50; i++ {
-			database.DB.Create(&models.Provider{Name: fake.Company(), Email: fake.EmailAddress(), Phone: fake.Phone()})
+			providers = append(providers, models.Provider{Name: fake.Company(), Email: fake.EmailAddress(), Phone: fake.Phone()})
 		}
+		database.DB.Create(&providers)
 	}
 }
 
@@ -44,8 +46,9 @@ func seedServices() {
 	database.DB.Find(&providers)
 	if len(services) == 0 {
 		for i := 0; i < 50; i++ {
-			database.DB.Create(&models.Service{Name: fake.Word(), Description: fake.Paragraph(), ProviderID: providers[rand.Intn(len(providers))].ID})
+			services = append(services, models.Service{Name: fake.Word(), Description: fake.Paragraph(), ProviderID: providers[rand.Intn(len(providers))].ID, Cost: rand.Float32() * 100})
 		}
+		database.DB.Create(&services)
 	}
 }
 
@@ -60,8 +63,9 @@ func seedRequests() {
 	statuses := constants.AllStatuses()
 	if len(requests) == 0 {
 		for i := 0; i < 200; i++ {
-			database.DB.Create(&models.Request{ClientID: clients[rand.Intn(len(clients))].ID, ServiceID: services[rand.Intn(len(services))].ID, Status: statuses[rand.Intn(len(statuses))]})
+			requests = append(requests, models.Request{ClientID: clients[rand.Intn(len(clients))].ID, ServiceID: services[rand.Intn(len(services))].ID, Status: statuses[rand.Intn(len(statuses))]})
 		}
+		database.DB.Create(&requests)
 	}
 }
 
@@ -70,12 +74,13 @@ func seedPayments() {
 	var requests []models.Request
 
 	database.DB.Find(&payments)
-	database.DB.Find(&requests)
+	database.DB.Preload("Service").Find(&requests)
 	if len(payments) == 0 {
 		for _, request := range requests {
 			if request.Status == constants.Completed {
-				database.DB.Create(&models.Payment{RequestID: request.ID, PayedAt: time.Unix(rand.Int63n(time.Now().Unix()-94608000)+94608000, 0)})
+				payments = append(payments, models.Payment{RequestID: request.ID, PaidAt: time.Unix(rand.Int63n(time.Now().Unix()-94608000)+94608000, 0), Paid: request.Service.Cost})
 			}
 		}
+		database.DB.Create(&payments)
 	}
 }

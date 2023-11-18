@@ -26,7 +26,7 @@ func (u *PaymentController) CreatePayment(c *gin.Context) {
 	}
 	fmt.Printf("RequestID: %d\n", vm.ClientID)
 
-	vm.PayedAt = time.Now()
+	vm.PaidAt = time.Now()
 	database.DB.Create(&vm.Payment)
 
 	var request models.Request
