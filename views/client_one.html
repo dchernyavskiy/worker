@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/styles/app.css">
+    <title>User List</title>
+</head>
+<body>
+<h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Clients</h1>
+<div class="flex flex-col w-fit mx-auto gap-2 justify-center self-center">
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Full Name:</label>
+        <span>{{.FirstName}} {{.LastName}}</span>
+    </div>
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Email:</label>
+        <span>{{.Email}}</span>
+    </div>
+    <div class="flex flex-row gap-2">
+        <label class="font-bold">Phone:</label>
+        <span>{{.Phone}}</span>
+    </div>
+</div>
+<div class="flex flex-col w-fit mx-auto gap-2 justify-center self-center">
+    <form class="flex flex-col w-fit mx-auto gap-2 justify-center self-center" action="/api/request" method="post"
+          enctype="application/x-www-form-urlencoded">
+        <h1 class="flex flex-row justify-center self-center w-full text-center text-2xl py-4 font-bold">Create
+            Request</h1>
+        <input type="hidden" id="ClientID" name="ClientID" value="{{.ID}}">
+        <div class="mb-6">
+            <label for="ServiceID" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Service:</label>
+            <select type="text" id="ServiceID" name="ServiceID"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required>
+                {{ range .Services}}
+                <option value="{{.ID}}">{{.Name}} - {{.Provider.Name}}</option>
+                {{end}}
+            </select>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-bold">Create</button>
+    </form>
+</div>
+<div class="mx-auto  w-fit relative overflow-x-auto sm:rounded-lg">
+    <h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Requests</h1>
+
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+            <th scope="col" class="px-6 py-3">
+                Service
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Provider
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Status
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Payed or Pay
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{$clientId := .ID}}
+        {{range .Requests}}
+        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <a href="/services/{{.Service.ID}}">
+                    {{.Service.Name}}
+                </a>
+            </th>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <a href="providers/{{.Service.Provider.ID}}">
+                    {{.Service.Provider.Name}}
+                </a>
+            </th>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{.Status}}
+            </th>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{if eq .Status "Completed"}}
+                {{.Payment.PayedAt}}
+                {{else}}
+                <form action="/api/payment" method="post" enctype="application/x-www-form-urlencoded">
+                    <input type="hidden" id="RequestID" name="RequestID" value="{{.ID}}">
+                    <input type="hidden" id="ClientID" name="ClientID" value="{{$clientId}}">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-bold">Pay</button>
+                </form>
+                {{end}}
+            </th>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

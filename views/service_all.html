@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="public/styles/app.css">
+    <title>Service List</title>
+</head>
+<body>
+<h1 class="flex flex-row justify-center self-center w-full text-center text-3xl py-4 font-bold">Services</h1>
+<div class="w-full flex flex-row justify-center py-2">
+    <a href="services/create" class="w-fit mx-auto px-4 py-2 bg-blue-500 text-white font-bold">Create</a>
+</div>
+<div class="mx-auto w-fit relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+            <th scope="col" class="px-6 py-3">
+                Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Description
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Provider
+            </th>
+            <th scope="col" class="px-6 py-3">
+                Actions
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Services}}
+        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{.Name}}
+            </th>
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-normal dark:text-white max-w-2xl">
+                {{.Description}}
+            </th>
+            <td class="px-6 py-4">
+                <a href="providers/{{.Provider.ID}}">
+                    {{.Provider.Name}}
+                </a>
+            </td>
+            <td class="px-6 py-4 flex flex-row gap-2">
+                <form action="/api/services/delete/{{.ID}}" method="post" enctype="application/x-www-form-urlencoded">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="px-4 py-2 bg-rose-500 text-white font-bold">Delete</button>
+                </form>
+                <a href="services/{{.ID}}/update" class="px-4 py-2 bg-yellow-500 text-white font-bold">Update</a>
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

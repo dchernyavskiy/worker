@@ -33,7 +33,7 @@ func CloseDB() {
 }
 
 func AutoMigrateModels() {
-	err := DB.AutoMigrate(&models.User{})
+	err := DB.AutoMigrate(&models.Client{}, &models.Provider{}, &models.Service{}, &models.Request{}, &models.Payment{})
 	if err != nil {
 		panic(err.Error())
 	}
